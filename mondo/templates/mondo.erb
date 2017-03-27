@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+##Mondo Backup Script
+## v1.0 Jeffrey Fu
+
+no_week=$((($(date +%d)-1)/7+1))
+
+/usr/sbin/mondoarchive -OVi -d /mondo -T /mondo -S /mondo -N -p `hostname`-mondo -E "/mondo|/opt/stage|/var/crash" -s 7G
+mondo_status=$?
+
+if [ $mondo_status = 0 ]
+   then
+     echo "The Mondo backup is done successfully. (Return code: $mondo_status)" >> /var/log/mondoarchive.log
+     cp /var/log/mondoarchive.log  /mondo/mondoarchive-$no_week.log
+   else
+     echo "The Mondo backup is failed. (Return code: $mondo_status)" >> /var/log/mondoarchive.log
+     echo "Please check the mondo log at `hostname`" |mailx -s "The mondo backup is failed at `hostname`" unix@hssbc.ca
+     cp /var/log/mondoarchive.log  /mondo/mondoarchive-$no_week.log
+fi
