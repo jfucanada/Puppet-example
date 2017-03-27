@@ -11,7 +11,7 @@ class gssh {
                  group => 'root',
                  mode => '0700',
              }
-
+## It will replace existing authorized_keys file with this template
         file { '/root/.ssh/authorized_keys':
                  content => template('gssh/authorized_keys_lnxprod.erb'),
                  owner => 'root',
